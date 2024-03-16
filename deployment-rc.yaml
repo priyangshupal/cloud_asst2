@@ -13,19 +13,18 @@ spec:
 
 ---
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: ReplicationController
 metadata:
-  name: cloudasst2-flask
+  name: cloudasst2-flask-rc
 spec:
-  replicas: 3
+  replicas: 4
   selector:
-    matchLabels:
-      app: cloudasst2-flask
+    app: cloudasst2-flask-rc
   template:
     metadata:
       labels:
-        app: cloudasst2-flask
+        app: cloudasst2-flask-rc
     spec:
       containers:
         - name: flask-app
@@ -37,11 +36,6 @@ spec:
               value: "mongo-lb"
             - name: MONGO_PORT
               value: "27017"
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
   
 
 ---
@@ -81,7 +75,7 @@ metadata:
   name: cloudasst2-flask-lb
 spec:
   selector:
-    app: cloudasst2-flask
+    app: cloudasst2-flask-rc
   ports:
     - port: 5000
       targetPort: 5000

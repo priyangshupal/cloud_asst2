@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: aravindkrish23/cloudasst2:alpha_v2
+          image: aravindkrish23/cloudasst2:alpha_v5
           ports:
             - containerPort: 5000
           env:
@@ -37,6 +37,21 @@ spec:
               value: "mongo-lb"
             - name: MONGO_PORT
               value: "27017"
+            - name: FAIL_SIMULATION
+              value: "True"
+          livenessProbe:
+            httpGet:
+              path: /testHealth
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /testReadiness
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+
   strategy:
     type: RollingUpdate
     rollingUpdate:

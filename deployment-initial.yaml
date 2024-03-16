@@ -37,12 +37,6 @@ spec:
               value: "mongo-lb"
             - name: MONGO_PORT
               value: "27017"
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-  
 
 ---
 
