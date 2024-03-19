@@ -1,0 +1,8 @@
+alerting:
+  alertmanagers:
+    - scheme: http
+      static_configs:
+        - targets:
+            - "alertmanager.monitoring.svc:9093"
+rule_files:
+  - /etc/prometheus/prometheus.rules
