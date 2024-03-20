@@ -9,7 +9,7 @@ data:
     templates:
     - '/etc/alertmanager/*.tmpl'
     route:
-      receiver: alert-emailer
+      receiver: slack_demo
       group_by: ['alertname', 'priority']
       group_wait: 10s
       repeat_interval: 30m
@@ -20,16 +20,9 @@ data:
             severity: slack
           group_wait: 10s
           repeat_interval: 1m
- 
+
     receivers:
-    - name: alert-emailer
-      email_configs:
-      - to: demo@devopscube.com
-        send_resolved: false
-        from: from-email@email.com
-        smarthost: smtp.eample.com:25
-        require_tls: false
     - name: slack_demo
       slack_configs:
-      - api_url: https://hooks.slack.com/services/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sz4Qk
-        channel: '#devopscube-demo'
+      - api_url: https://hooks.slack.com/services/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
+        channel: '#test'

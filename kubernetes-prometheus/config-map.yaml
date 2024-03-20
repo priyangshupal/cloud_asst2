@@ -8,15 +8,16 @@ metadata:
 data:
   prometheus.rules: |-
     groups:
-    - name: devopscube demo alert
+    - name: pod-restart-alerts
       rules:
-      - alert: High Pod Memory
-        expr: sum(container_memory_usage_bytes) > 1
-        for: 1m
-        labels:
-          severity: slack
-        annotations:
-          summary: High Memory Usage
+        - alert: PodRestartExceedsThreshold
+          expr: increase(kube_pod_container_status_restarts_total[10m]) > 1
+          for: 1m
+          labels:
+            severity: slack
+          annotations:
+            summary: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted more than 1 time"
+            description: "The pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted more than 1 times within the last 10 minutes."
   prometheus.yml: |-
     global:
       scrape_interval: 5s
@@ -135,3 +136,23 @@ data:
         - source_labels: [__meta_kubernetes_service_name]
           action: replace
           target_label: kubernetes_name
+  config.yml: |-
+    global:
+    templates:
+    - '/etc/alertmanager/*.tmpl'
+    route:
+      receiver: alert-slack
+      group_by: ['alertname', 'priority']
+      group_wait: 10s
+      repeat_interval: 1m
+      routes:
+        - receiver: slack_demo
+          match:
+            severity: slack
+          group_wait: 10s
+          repeat_interval: 1m
+    receivers:
+    - name: slack_demo
+      slack_configs:
+      - api_url: https://hooks.slack.com/services/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
+        channel: '#test'
