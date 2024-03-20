@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: priyangshupal/todo:latest
+          image: aravindkrish23/cloudasst2:alpha_v5
           ports:
             - containerPort: 5000
           env:
